@@ -1,0 +1,53 @@
+name: release-prepare
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version component to bump
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-prepare
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: echo "This action can only be run on the main branch." && exit 1
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+          show-progress: false
+          token: ${{ secrets.RELEASE_TOKEN }}
+      - name: Configure git
+        run: |
+          git config --global --add safe.directory "${{ github.workspace }}"
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+      - name: Prepare release
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          uv version --bump "$BUMP" --frozen
+          version="$(uv version --short)"
+          git add pyproject.toml
+          git commit -m "Prepare release v${version}"
+          git tag -a "v${version}" -m "Release v${version}"
+          git log --pretty="format:%ce: %s" -3
+          git push --atomic origin HEAD:main "refs/tags/v${version}"

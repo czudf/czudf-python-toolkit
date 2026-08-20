@@ -1,0 +1,38 @@
+name: release-publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/czudf-toolkit/
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+      - name: Verify release version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version="$(uv version --short)"
+          test "$TAG" = "v${version}" || {
+            echo "Tag ${TAG} does not match project version v${version}."
+            exit 1
+          }
+      - name: Build distributions
+        run: uv build
+      - name: Publish distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

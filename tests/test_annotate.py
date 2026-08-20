@@ -1,7 +1,7 @@
 # Copyright 2025 Yunqi Inc
 # SPDX-License-Identifier: Apache-2.0
 
-from czudf_toolkit import annotate
+from czudf import annotate
 
 
 def test_annotate():
