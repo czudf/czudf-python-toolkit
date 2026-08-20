@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Yunqi Inc
+# SPDX-License-Identifier: Apache-2.0
+
 [project]
 name = "czudf-toolkit"
 version = "0.0.2"
@@ -5,20 +8,20 @@ description = "Python toolkit for developing UDFs on the ClickZetta platform"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
-license-files = ["LICENSE"]
-dependencies = []
+license-files = ["LICENSES/Apache-2.0.txt"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3 :: Only",
-  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+dependencies = []
 
 [[project.authors]]
 name = "guantao.gao"
@@ -26,18 +29,21 @@ email = "guantao.gao@clickzetta.com"
 
 [project.urls]
 Homepage = "https://github.com/czudf/czudf-python-toolkit"
-Repository = "https://github.com/czudf/czudf-python-toolkit"
 Issues = "https://github.com/czudf/czudf-python-toolkit/issues"
+Repository = "https://github.com/czudf/czudf-python-toolkit"
 
 [dependency-groups]
-dev = ["mypy", "ruff==0.12.11", "pytest"]
+dev = ["mypy", "pytest", "reuse[charset-normalizer]", "ruff==0.12.11"]
 
 [build-system]
 requires = ["uv_build>=0.11.30,<0.12.0"]
 build-backend = "uv_build"
 
-[tool.uv.build-backend]
-module-name = "czudf"
+[tool.mypy]
+strict = true
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+disallow_untyped_calls = false
 
 [tool.ruff]
 line-length = 100
@@ -50,16 +56,13 @@ select = [
   "F",  # pyflakes
   "I",  # isort
   "B",  # flake8-bugbear
-  "C4", # flake8-comprehensions
-  "UP", # pyupgrade
+  "C4",  # flake8-comprehensions
+  "UP",  # pyupgrade
 ]
 isort = { combine-as-imports = true, known-first-party = ["czudf"] }
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
-[tool.mypy]
-strict = true
-disallow_incomplete_defs = false
-disallow_untyped_defs = false
-disallow_untyped_calls = false
+[tool.uv.build-backend]
+module-name = "czudf"
