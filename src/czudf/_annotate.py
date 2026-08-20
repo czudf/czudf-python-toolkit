@@ -2,13 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from collections.abc import Callable
-from typing import TypeVar
+from typing import TypeVar, cast
+
+from ._runtime import _runtime_annotate
 
 T = TypeVar("T", bound=object)
-
-
-def _register_internal(cls: type[T], signature: str) -> None:
-    pass
 
 
 def annotate(signature: str) -> Callable[[type[T]], type[T]]:
@@ -25,8 +23,4 @@ def annotate(signature: str) -> Callable[[type[T]], type[T]]:
         signature: The signature of the UDF.
     """
 
-    def _wrapper(cls: type[T]) -> type[T]:
-        _register_internal(cls, signature)
-        return cls
-
-    return _wrapper
+    return cast(Callable[[type[T]], type[T]], _runtime_annotate(signature))
