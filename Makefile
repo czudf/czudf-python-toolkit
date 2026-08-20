@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Yunqi Inc
+# SPDX-License-Identifier: Apache-2.0
+
 .PHONY: sync
 sync:
 	uv sync --all-extras --all-packages --group dev
@@ -14,6 +17,7 @@ format-check:
 .PHONY: lint
 lint: 
 	uv run ruff check
+	uv run reuse lint
 
 .PHONY: mypy
 mypy: 
