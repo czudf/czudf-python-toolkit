@@ -1,6 +1,6 @@
 [project]
 name = "czudf-toolkit"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python toolkit for developing UDFs on the ClickZetta platform"
 readme = "README.md"
 requires-python = ">=3.10"
