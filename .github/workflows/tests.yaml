@@ -27,3 +27,5 @@ jobs:
         run: make mypy
       - name: Run tests
         run: make tests
+      - name: Build distributions
+        run: uv build
